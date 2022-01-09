@@ -35,7 +35,7 @@ class SplashFragment : Fragment() {
         hideStatusBar()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            delay(1500L)
+            delay(2000L)
             findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }
     }
