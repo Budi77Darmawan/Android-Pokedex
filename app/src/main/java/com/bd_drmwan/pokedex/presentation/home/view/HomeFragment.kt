@@ -1,7 +1,6 @@
 package com.bd_drmwan.pokedex.presentation.home.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bd_drmwan.commonextension.extensions.gone
+import com.bd_drmwan.commonextension.extensions.hideSoftKeyboard
 import com.bd_drmwan.commonextension.extensions.toast
 import com.bd_drmwan.commonextension.extensions.visible
 import com.bd_drmwan.pokedex.core.model.RequestStatus
@@ -20,8 +20,6 @@ import com.bd_drmwan.pokedex.databinding.FragmentHomeBinding
 import com.bd_drmwan.pokedex.presentation.home.adapter.PokemonGridAdapter
 import com.bd_drmwan.pokedex.presentation.home.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import android.view.ViewTreeObserver
-import android.view.ViewTreeObserver.OnScrollChangedListener
 
 
 @AndroidEntryPoint
@@ -64,10 +62,10 @@ class HomeFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
-                    val layoutMgr = recyclerView.layoutManager as GridLayoutManager
-                    val itemCount = layoutMgr.itemCount
-                    val lastVisible = layoutMgr.findLastCompletelyVisibleItemPosition()
-                    val isRequest = (itemCount - 2) == lastVisible
+                    val layoutMgr = recyclerView.layoutManager as? GridLayoutManager
+                    val itemCount = layoutMgr?.itemCount ?: 0
+                    val lastVisible = layoutMgr?.findLastCompletelyVisibleItemPosition()
+                    val isRequest = (itemCount - 3) == lastVisible
 
                     if (isRequest) viewModel.getNextPageListPokemon()
                 }
@@ -81,9 +79,12 @@ class HomeFragment : Fragment() {
             inputSearch.doAfterTextChanged {
                 if (it?.isEmpty() == true) iconCancelSearch.gone()
                 else iconCancelSearch.visible()
+                viewModel.searchPokemon(it.toString())
             }
-            inputSearch.setOnEditorActionListener { _, actionId, _ ->
+            inputSearch.setOnEditorActionListener { view, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    view.clearFocus()
+                    hideSoftKeyboard(view)
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
@@ -129,7 +130,7 @@ class HomeFragment : Fragment() {
                         binding.progressCircularBottom.gone()
                         toast(it.message)
                     }
-                    else -> {}
+                    else -> Unit
                 }
             }
         }

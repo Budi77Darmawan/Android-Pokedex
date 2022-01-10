@@ -89,13 +89,14 @@
                 app:layout_constraintEnd_toStartOf="@id/img_pokemon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/img_pokemon"
-                app:layout_constraintVertical_chainStyle="spread"
+                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Grass" />
 
             <TextView
                 android:id="@+id/tv_pokemon_type_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/background_rounded_search_10dp"
                 android:ellipsize="end"
                 android:gravity="center"

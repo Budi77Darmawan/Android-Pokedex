@@ -6,6 +6,8 @@ import com.bd_drmwan.pokedex.core.model.PokemonModel
 import com.bd_drmwan.pokedex.core.model.RequestStatus
 import com.bd_drmwan.pokedex.core.repository.IPokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,20 +26,39 @@ class HomeViewModel @Inject constructor(
     val listPokemonNextPage get() = _listPokemonNextPage.asStateFlow()
 
     private var page = 1
+    private val tempData = mutableListOf<PokemonModel>()
 
     fun getListPokemon() {
         viewModelScope.launch {
             repository.getListPokemon(page).collect {
                 if (page == 1) _listPokemon.emit(it)
                 else _listPokemonNextPage.emit(it)
+                updateTemporaryData(it)
             }
         }
     }
 
     fun getNextPageListPokemon() {
-        if (listPokemonNextPage.value is RequestStatus.Success || listPokemonNextPage.value == null) {
+        if (listPokemonNextPage.value !is RequestStatus.Loading) {
             page++
             getListPokemon()
+        }
+    }
+
+    fun searchPokemon(query: String) {
+        viewModelScope.launch {
+            if (query.isBlank()) {
+                _listPokemon.emit(RequestStatus.Success(tempData))
+            } else {
+                val data = tempData.filter { it.name.contains(query, true) }
+                _listPokemon.emit(RequestStatus.Success(data))
+            }
+        }
+    }
+
+    private fun updateTemporaryData(data: RequestStatus<List<PokemonModel>>?) {
+        if (data is RequestStatus.Success) {
+            tempData.addAll(data.data ?: listOf())
         }
     }
 }
