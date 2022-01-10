@@ -19,12 +19,25 @@ class HomeViewModel @Inject constructor(
     private val _listPokemon =
         MutableStateFlow<RequestStatus<List<PokemonModel>>?>(null)
     val listPokemon get() = _listPokemon.asStateFlow()
+    private val _listPokemonNextPage =
+        MutableStateFlow<RequestStatus<List<PokemonModel>>?>(null)
+    val listPokemonNextPage get() = _listPokemonNextPage.asStateFlow()
+
+    private var page = 1
 
     fun getListPokemon() {
         viewModelScope.launch {
-            repository.getListPokemon(1).collect {
-                _listPokemon.emit(it)
+            repository.getListPokemon(page).collect {
+                if (page == 1) _listPokemon.emit(it)
+                else _listPokemonNextPage.emit(it)
             }
+        }
+    }
+
+    fun getNextPageListPokemon() {
+        if (listPokemonNextPage.value is RequestStatus.Success || listPokemonNextPage.value == null) {
+            page++
+            getListPokemon()
         }
     }
 }
