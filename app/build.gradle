@@ -17,6 +17,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+        def baseUrl = "https://pokeapi.co/api/v2/"
+        buildConfigField("String", "BASE_URL", "\"" + baseUrl + "\"")
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

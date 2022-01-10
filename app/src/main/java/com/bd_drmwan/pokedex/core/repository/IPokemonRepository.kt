@@ -1,0 +1,9 @@
+package com.bd_drmwan.pokedex.core.repository
+
+import com.bd_drmwan.pokedex.core.model.PokemonModel
+import com.bd_drmwan.pokedex.core.model.RequestStatus
+import kotlinx.coroutines.flow.Flow
+
+interface IPokemonRepository {
+    suspend fun getListPokemon(page: Int): Flow<RequestStatus<List<PokemonModel>>>
+}
