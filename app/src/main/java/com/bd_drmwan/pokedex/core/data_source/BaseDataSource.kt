@@ -3,6 +3,7 @@ package com.bd_drmwan.pokedex.core.data_source
 import com.bd_drmwan.pokedex.core.model.ErrorTypeEnum
 import retrofit2.Response
 import java.io.IOException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 open class BaseDataSource {
@@ -25,6 +26,7 @@ open class BaseDataSource {
         messageError: suspend (String, ErrorTypeEnum) -> Unit
     ) {
         when (error) {
+            is ConnectException -> messageError(error.localizedMessage ?:"Internal server error", ErrorTypeEnum.NO_CONNECTION)
             is SocketTimeoutException -> messageError("Socket timeout", ErrorTypeEnum.TIMEOUT)
             is IOException -> messageError("Connection timeout", ErrorTypeEnum.TIMEOUT)
             else -> messageError(error.localizedMessage ?:"Internal server error", ErrorTypeEnum.BASIC)

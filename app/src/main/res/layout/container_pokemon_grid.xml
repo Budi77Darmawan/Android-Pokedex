@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#99FFFFFF"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -68,11 +68,11 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:src="@drawable/img_bulbasaur"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_pokemon_id"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                tools:src="@drawable/img_bulbasaur" />
 
             <TextView
                 android:id="@+id/tv_pokemon_type_1"

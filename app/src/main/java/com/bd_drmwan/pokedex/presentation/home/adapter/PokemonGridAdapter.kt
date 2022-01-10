@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bd_drmwan.commonextension.extensions.gone
+import com.bd_drmwan.commonextension.extensions.loadImage
 import com.bd_drmwan.commonextension.extensions.visible
 import com.bd_drmwan.pokedex.core.model.PokemonModel
 import com.bd_drmwan.pokedex.core.model.tag
 import com.bd_drmwan.pokedex.databinding.ContainerPokemonGridBinding
-import com.bumptech.glide.Glide
 
 class PokemonGridAdapter : RecyclerView.Adapter<PokemonGridAdapter.PokemonViewHolder>() {
     private var listPokemon = mutableListOf<PokemonModel>()
@@ -44,9 +44,7 @@ class PokemonGridAdapter : RecyclerView.Adapter<PokemonGridAdapter.PokemonViewHo
                 }
 
                 val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png"
-                Glide.with(root.context)
-                    .load(imageUrl)
-                    .into(imgPokemon)
+                imgPokemon.loadImage(imageUrl)
 
             }
         }

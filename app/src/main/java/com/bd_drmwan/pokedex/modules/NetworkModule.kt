@@ -1,13 +1,17 @@
 package com.bd_drmwan.pokedex.modules
 
 import android.content.Context
+import com.bd_drmwan.pokedex.core.services.NetworkException
+import com.bd_drmwan.pokedex.core.services.NetworkUtil
 import com.readystatesoftware.chuck.ChuckInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,13 +37,29 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun provideNetworkInterceptor(
+        @ApplicationContext mContext: Context
+    ): Interceptor {
+        return Interceptor { chain ->
+            val request: Request = chain.request()
+            if (!NetworkUtil.isConnected(mContext)) {
+                throw NetworkException()
+            }
+            chain.proceed(request)
+        }
+    }
+
+    @Singleton
+    @Provides
     fun provideOkhttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        chuckInterceptor: ChuckInterceptor
+        chuckInterceptor: ChuckInterceptor,
+        networkInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient().newBuilder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(chuckInterceptor)
+            .addInterceptor(networkInterceptor)
             .build()
     }
 

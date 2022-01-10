@@ -6,8 +6,6 @@ import com.bd_drmwan.pokedex.core.model.PokemonModel
 import com.bd_drmwan.pokedex.core.model.RequestStatus
 import com.bd_drmwan.pokedex.core.repository.IPokemonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

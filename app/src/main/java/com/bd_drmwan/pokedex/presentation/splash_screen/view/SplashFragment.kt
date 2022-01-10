@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bd_drmwan.commonextension.extensions.hideStatusBar
+import com.bd_drmwan.commonextension.extensions.showStatusBar
 import com.bd_drmwan.pokedex.R
 import com.bd_drmwan.pokedex.databinding.FragmentSplashBinding
 import kotlinx.coroutines.delay
@@ -36,6 +37,7 @@ class SplashFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             delay(2000L)
+            showStatusBar()
             findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }
     }
