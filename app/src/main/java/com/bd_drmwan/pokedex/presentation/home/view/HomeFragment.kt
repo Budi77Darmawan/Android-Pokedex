@@ -119,7 +119,10 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.listPokemonNextPage.collect {
                 when (it) {
-                    is RequestStatus.Loading -> binding.progressCircularBottom.visible()
+                    is RequestStatus.Loading -> {
+                        binding.progressCircularBottom.visible()
+                        binding.rvPokemon.smoothScrollToPosition(binding.rvPokemon.bottom)
+                    }
                     is RequestStatus.Success -> {
                         binding.progressCircularBottom.gone()
                         it.data?.let { data ->

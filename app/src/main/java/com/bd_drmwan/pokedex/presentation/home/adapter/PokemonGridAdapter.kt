@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bd_drmwan.commonextension.extensions.gone
 import com.bd_drmwan.commonextension.extensions.loadImage
 import com.bd_drmwan.commonextension.extensions.visible
+import com.bd_drmwan.pokedex.R
 import com.bd_drmwan.pokedex.core.model.PokemonModel
 import com.bd_drmwan.pokedex.core.model.tag
 import com.bd_drmwan.pokedex.databinding.ContainerPokemonGridBinding
@@ -44,7 +45,7 @@ class PokemonGridAdapter : RecyclerView.Adapter<PokemonGridAdapter.PokemonViewHo
                 }
 
                 val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png"
-                imgPokemon.loadImage(imageUrl)
+                imgPokemon.loadImage(imageUrl, R.color.white)
 
             }
         }

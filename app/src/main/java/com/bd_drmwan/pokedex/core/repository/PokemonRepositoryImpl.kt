@@ -1,12 +1,8 @@
 package com.bd_drmwan.pokedex.core.repository
 
 import com.bd_drmwan.pokedex.core.data_source.RemoteDataSource
-import com.bd_drmwan.pokedex.core.model.ListPokemonResponse
-import com.bd_drmwan.pokedex.core.model.PokemonModel
-import com.bd_drmwan.pokedex.core.model.PokemonResponse
-import com.bd_drmwan.pokedex.core.model.RequestStatus
+import com.bd_drmwan.pokedex.core.model.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -15,6 +11,14 @@ class PokemonRepositoryImpl @Inject constructor(
 ): IPokemonRepository {
     override suspend fun getListPokemon(page: Int): Flow<RequestStatus<List<PokemonModel>>> {
         return getRemotePokemon(page)
+    }
+
+    override suspend fun getEvolutionPokemon(speciesId: Int): Flow<RequestStatus<PokemonSpeciesResponse>> {
+        return remoteDataSource.getEvolutionPokemon(speciesId)
+    }
+
+    override suspend fun getDetailPokemon(id: Int): Flow<RequestStatus<PokemonResponse>> {
+        return remoteDataSource.getDetailPokemonById(id)
     }
 
     private suspend fun getRemotePokemon(page: Int): Flow<RequestStatus<List<PokemonModel>>> {
@@ -28,9 +32,11 @@ class PokemonRepositoryImpl @Inject constructor(
                             emit(RequestStatus.Success(listOf()))
                         } else {
                             it.data?.results?.forEach { pokemon ->
-                                val id = pokemon.url?.split("/")
-                                    ?.filter { url -> url.isNotBlank() } ?: listOf()
-                                data.add(getDetailPokemon(id.last().toInt()))
+                                getDetailPokemon(pokemon.id).collect { res ->
+                                    if (res is RequestStatus.Success) {
+                                        data.add(mapPokemonResponseToModel(res.data))
+                                    }
+                                }
                             }
                             emit(RequestStatus.Success(data))
                         }
@@ -43,17 +49,15 @@ class PokemonRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getDetailPokemon(id: Int): PokemonModel {
-        var pokemon = PokemonModel(id,"null", mutableListOf())
-        remoteDataSource.getDetailPokemonById(id).collect {
-            if (it is RequestStatus.Success) {
-                pokemon = PokemonModel(
-                    id,
-                    it.data?.name.toString(),
-                    it.data?.types?.map { data -> data.type?.name.toString() }?.toMutableList()
-                )
-            }
+    private suspend fun mapPokemonResponseToModel(data: PokemonResponse?): PokemonModel {
+        return if (data == null) {
+            PokemonModel(0,"", mutableListOf())
+        } else {
+            PokemonModel(
+                data.id ?: 0,
+                data.name.toString(),
+                data.types.map { res -> res.type?.name.toString() }.toMutableList()
+            )
         }
-        return pokemon
     }
 }

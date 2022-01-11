@@ -2,6 +2,7 @@ package com.bd_drmwan.pokedex.core.data_source
 
 import com.bd_drmwan.pokedex.core.model.ListPokemonResponse
 import com.bd_drmwan.pokedex.core.model.PokemonResponse
+import com.bd_drmwan.pokedex.core.model.PokemonSpeciesResponse
 import com.bd_drmwan.pokedex.core.model.RequestStatus
 import com.bd_drmwan.pokedex.core.services.PokemonService
 import kotlinx.coroutines.flow.Flow
@@ -37,6 +38,26 @@ class RemoteDataSource @Inject constructor(
         return flow {
             try {
                 val response = service.getPokemonById(id)
+                validateResponse(response,
+                    onSuccess = {
+                        emit(RequestStatus.Success(it))
+                    },
+                    onError = {
+                        emit(RequestStatus.Error(it))
+                    }
+                )
+            } catch (e: Throwable) {
+                validateError(e) { errorMsg, errorType ->
+                    emit(RequestStatus.Error(errorMsg, errorType))
+                }
+            }
+        }
+    }
+
+    fun getEvolutionPokemon(speciesId: Int): Flow<RequestStatus<PokemonSpeciesResponse>> {
+        return flow {
+            try {
+                val response = service.getEvolutionPokemon(speciesId)
                 validateResponse(response,
                     onSuccess = {
                         emit(RequestStatus.Success(it))
