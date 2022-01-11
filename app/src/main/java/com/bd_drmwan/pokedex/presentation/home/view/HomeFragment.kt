@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bd_drmwan.commonextension.extensions.gone
 import com.bd_drmwan.commonextension.extensions.hideSoftKeyboard
 import com.bd_drmwan.commonextension.extensions.toast
 import com.bd_drmwan.commonextension.extensions.visible
+import com.bd_drmwan.pokedex.R
 import com.bd_drmwan.pokedex.core.model.RequestStatus
 import com.bd_drmwan.pokedex.databinding.FragmentHomeBinding
 import com.bd_drmwan.pokedex.presentation.home.adapter.PokemonGridAdapter
@@ -54,6 +57,13 @@ class HomeFragment : Fragment() {
     private fun initRecyclerView() {
         binding.rvPokemon.apply {
             adapter = this@HomeFragment.adapter
+        }
+
+        adapter.onDetailClicked {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_detailFragment,
+                bundleOf("POKEMON" to it)
+            )
         }
     }
 

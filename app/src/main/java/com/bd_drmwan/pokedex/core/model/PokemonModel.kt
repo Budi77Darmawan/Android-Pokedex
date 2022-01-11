@@ -7,7 +7,9 @@ import kotlinx.parcelize.Parcelize
 data class PokemonModel(
     val id: Int,
     val name: String,
-    val type: MutableList<String>?
+    val type: MutableList<String>?,
+    val stat: MutableList<Stat>?,
+    val speciesId: Int
 ) : Parcelable
 
 fun PokemonModel.tag(): String {
@@ -17,4 +19,8 @@ fun PokemonModel.tag(): String {
         3 -> "#$id"
         else -> "#$id"
     }
+}
+
+fun PokemonModel.imageUri(): String {
+    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png"
 }

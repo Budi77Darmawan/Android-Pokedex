@@ -49,14 +49,16 @@ class PokemonRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun mapPokemonResponseToModel(data: PokemonResponse?): PokemonModel {
+    private fun mapPokemonResponseToModel(data: PokemonResponse?): PokemonModel {
         return if (data == null) {
-            PokemonModel(0,"", mutableListOf())
+            PokemonModel(0,"", null, null,0)
         } else {
             PokemonModel(
                 data.id ?: 0,
                 data.name.toString(),
-                data.types.map { res -> res.type?.name.toString() }.toMutableList()
+                data.types.map { res -> res.type?.name.toString() }.toMutableList(),
+                data.stats.toMutableList(),
+                data.species?.id ?: 0
             )
         }
     }
