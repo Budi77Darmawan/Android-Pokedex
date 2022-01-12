@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import com.bd_drmwan.commonextension.extensions.capitalize
 import com.bd_drmwan.commonextension.extensions.gone
 import com.bd_drmwan.commonextension.extensions.loadImage
@@ -15,18 +14,15 @@ import com.bd_drmwan.pokedex.core.model.PokemonModel
 import com.bd_drmwan.pokedex.core.model.imageUri
 import com.bd_drmwan.pokedex.core.model.tag
 import com.bd_drmwan.pokedex.databinding.FragmentDetailBinding
-import com.bd_drmwan.pokedex.presentation.detail.adapter.PokemonStatListAdapter
-import com.bd_drmwan.pokedex.presentation.detail.viewmodel.DetailViewModel
+import com.bd_drmwan.pokedex.presentation.detail.adapter.ViewPagerAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DetailViewModel by viewModels()
-    private val adapter: PokemonStatListAdapter by lazy { PokemonStatListAdapter() }
     private var pokemon: PokemonModel? = null
 
     override fun onDestroyView() {
@@ -52,18 +48,26 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
-        initRecyclerView()
+        initTabPager()
     }
 
-    private fun initRecyclerView() {
-        binding.rvStatistic.apply {
-            adapter = this@DetailFragment.adapter
-        }
-        val filterStat =
-            pokemon?.stat?.filterNot {
-                it.stat?.name?.contains("-") == true
-            } ?: mutableListOf()
-        adapter.setData(filterStat)
+    private fun initTabPager() {
+        val pagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        binding.viewPager.adapter = pagerAdapter
+
+        val listFragment = listOf(
+            StatisticFragment.newInstance(pokemon),
+            EvolutionFragment.newInstance(pokemon?.speciesId)
+        )
+        val titleFragment = listOf(
+            "Statistic",
+            "Evolution"
+        )
+
+        pagerAdapter.setupFragment(listFragment)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = titleFragment[position]
+        }.attach()
     }
 
     private fun setupView() {

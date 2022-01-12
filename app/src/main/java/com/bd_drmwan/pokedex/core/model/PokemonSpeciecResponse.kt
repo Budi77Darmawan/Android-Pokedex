@@ -8,5 +8,10 @@ data class PokemonSpeciesResponse(
     val id: Int?,
     val name: String?,
     val color: BasicResponse?,
-    val varieties: List<BasicResponse>?
+    val varieties: List<Varieties>?
+): Parcelable
+
+@Parcelize
+data class Varieties(
+    val pokemon: BasicResponse?
 ): Parcelable

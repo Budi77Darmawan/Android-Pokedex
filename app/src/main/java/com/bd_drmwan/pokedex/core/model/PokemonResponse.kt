@@ -26,6 +26,10 @@ val BasicResponse.id
         id.last().toInt()
     }
 
+fun BasicResponse.imageUri(): String {
+    return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png"
+}
+
 @Parcelize
 data class PokemonResponse(
     val abilities: List<Ability>?,

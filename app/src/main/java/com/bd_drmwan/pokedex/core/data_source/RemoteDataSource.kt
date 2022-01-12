@@ -36,6 +36,7 @@ class RemoteDataSource @Inject constructor(
 
     fun getDetailPokemonById(id: Int): Flow<RequestStatus<PokemonResponse>> {
         return flow {
+            emit(RequestStatus.Loading())
             try {
                 val response = service.getPokemonById(id)
                 validateResponse(response,
@@ -56,6 +57,7 @@ class RemoteDataSource @Inject constructor(
 
     fun getEvolutionPokemon(speciesId: Int): Flow<RequestStatus<PokemonSpeciesResponse>> {
         return flow {
+            emit(RequestStatus.Loading())
             try {
                 val response = service.getEvolutionPokemon(speciesId)
                 validateResponse(response,

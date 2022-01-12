@@ -11,12 +11,15 @@
         <entry key="app/src/main/res/drawable/ic_search_black.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/drawable/img_bulbasaur.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/activity_main_navigation.xml" value="0.25625" />
+        <entry key="app/src/main/res/layout/container_list_evolution.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/container_list_statistic.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/container_pokemon_grid.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.2703125" />
+        <entry key="app/src/main/res/layout/fragment_evolution.xml" value="0.25625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24680867661351294" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/fragment_splash_screen.xml" value="0.25625" />
+        <entry key="app/src/main/res/layout/fragment_statistic.xml" value="0.2703125" />
       </map>
     </option>
   </component>
