@@ -23,6 +23,7 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow<RequestStatus<List<PokemonModel>>?>(null)
     val listPokemonNextPage get() = _listPokemonNextPage.asStateFlow()
 
+    private var onSearchState = false
     private var page = 1
     private val tempData = mutableListOf<PokemonModel>()
 
@@ -37,7 +38,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getNextPageListPokemon() {
-        if (listPokemonNextPage.value !is RequestStatus.Loading) {
+        if (listPokemonNextPage.value !is RequestStatus.Loading && !onSearchState) {
             page++
             getListPokemon()
         }
@@ -46,8 +47,10 @@ class HomeViewModel @Inject constructor(
     fun searchPokemon(query: String) {
         viewModelScope.launch {
             if (query.isBlank()) {
+                onSearchState = false
                 _listPokemon.emit(RequestStatus.Success(tempData))
             } else {
+                onSearchState = true
                 val data = tempData.filter { it.name.contains(query, true) }
                 _listPokemon.emit(RequestStatus.Success(data))
             }
